@@ -45,17 +45,18 @@ const submit = async () => {
   }
 
   console.log('submit 함수 호출!');
-  if (route.params.memoId) {
-    // 수정 처리
-
-    return;
-  }
-
+  let data = null;
   const bodyJson = {
     title: state.memo.title,
     ctnts: state.memo.ctnts,
   };
-  const data = await httpService.save(bodyJson);
+  if (route.params.memoId) {
+    // 수정 처리
+    bodyJson.memoId = state.memo.memoId;
+    data = await httpService.modify(bodyJson);
+  } else {
+    data = await httpService.save(bodyJson);
+  }
   if (data.resultData === 1) {
     // 등록 성공
     // 홈 화면으로 라우터 처리
